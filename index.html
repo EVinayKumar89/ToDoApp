@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>✨ TaskFlow - Modern To-Do App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✅</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="theme-toggle">
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+      <div class="header-content">
+        <h1><i class="fas fa-check-circle"></i> TaskFlow</h1>
+        <p class="subtitle">Organize your life, one task at a time</p>
+      </div>
+      <div class="stats-container">
+        <div class="stats">
+          <div class="stat-item" title="Total Tasks">
+            <div class="stat-icon"><i class="fas fa-list"></i></div>
+            <div class="stat-content">
+              <span class="stat-number" id="total-tasks">0</span>
+              <span class="stat-label">Total</span>
+            </div>
+          </div>
+          <div class="stat-item" title="Completed Tasks">
+            <div class="stat-icon"><i class="fas fa-check"></i></div>
+            <div class="stat-content">
+              <span class="stat-number" id="completed-tasks">0</span>
+              <span class="stat-label">Done</span>
+            </div>
+          </div>
+          <div class="stat-item" title="Active Tasks">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-content">
+              <span class="stat-number" id="active-tasks">0</span>
+              <span class="stat-label">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="input-section">
+      <div class="input-group">
+        <div class="input-wrapper">
+          <i class="fas fa-plus input-icon"></i>
+          <input type="text" id="task-input" placeholder="What needs to be done?" />
+        </div>
+        <div class="input-wrapper category-wrapper">
+          <i class="fas fa-tag input-icon"></i>
+          <select id="category-select">
+            <option value="">Select Category</option>
+            <option value="work">Work</option>
+            <option value="personal">Personal</option>
+            <option value="shopping">Shopping</option>
+            <option value="health">Health</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="input-wrapper priority-wrapper">
+          <i class="fas fa-flag input-icon"></i>
+          <select id="priority-select">
+            <option value="">Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <button id="add-btn" class="add-btn">
+          <i class="fas fa-plus"></i>
+          <span>Add Task</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> All
+      </button>
+      <button class="filter-btn" data-filter="active">
+        <i class="fas fa-clock"></i> Active
+      </button>
+      <button class="filter-btn" data-filter="completed">
+        <i class="fas fa-check"></i> Completed
+      </button>
+      <div class="search-wrapper">
+        <i class="fas fa-search input-icon"></i>
+        <input type="text" id="search-input" placeholder="Search tasks..." />
+      </div>
+    </div>
+
+    <div class="tasks-container">
+      <ul id="task-list"></ul>
+      <div id="empty-state" class="empty-state">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No tasks yet</h3>
+        <p>Add your first task to get started!</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="sort-tasks" class="action-btn">
+        <i class="fas fa-sort"></i> Sort Tasks
+      </button>
+      <button id="clear-completed" class="action-btn">
+        <i class="fas fa-trash"></i> Clear Completed
+      </button>
+      <button id="clear-all" class="action-btn danger">
+        <i class="fas fa-trash-alt"></i> Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification - Updated to be a proper popup -->
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <div class="toast-icon"></div>
+      <div class="toast-message"></div>
+      <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="toast-progress"></div>
+  </div>
+
+  <!-- Task Details Modal -->
+  <div id="task-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Task Details</h2>
+      <div id="task-details"></div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <i class="fas fa-check-circle"></i> TaskFlow
+      </div>
+      <div class="footer-links">
+        <a href="#" title="About"><i class="fas fa-info-circle"></i></a>
+        <a href="#" title="Settings"><i class="fas fa-cog"></i></a>
+        <a href="#" title="Help"><i class="fas fa-question-circle"></i></a>
+      </div>
+      <div class="footer-info">
+        <p>Made with <i class="fas fa-heart"></i> by TaskFlow</p>
+        <p class="version">v2.0 | <span id="current-year"></span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
